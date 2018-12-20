@@ -1,0 +1,49 @@
+.container {
+    display: block;
+    max-width: 400px;
+    height: 180px;
+    border: 1px solid rgb(182, 182, 182);
+    border-radius: 5px;
+    margin: auto;
+    margin-top: 200px;
+    box-shadow: 15px 15px 25px rgb(148, 148, 148);
+    font-family: Arial, Helvetica, sans-serif;
+    z-index: 6000;
+}
+@keyframes one {
+    0% {
+        opacity: 0
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0
+    }
+}
+
+.loader-circle {
+    width: 40px;
+    padding: 0;
+    margin: auto;
+    margin-top: 10%;
+    border: none;
+    display: flex;
+    flex-flow: row;
+    flex-wrap: wrap;
+}
+.loader-circle>div {
+    
+    height: 20px;
+    width: 20px;
+    background-color: rgb(48, 47, 110);
+    border: 1px solid rgb(255, 255, 255);
+}
+.one {
+    animation: one 1s linear infinite;
+}
+.status {
+    font-size: 18px;
+    color: grey;
+    text-align: center;
+}
