@@ -7,61 +7,82 @@ import "./App.css";
 import { Route } from "react-router-dom";
 import SearchBooks from "./components/search-page/SearchBooks.js";
 import { Link } from "react-router-dom";
-import Loader from './loader/Loader.js';
-import Shelf from './components/shelf/Shelf';
+import Loader from "./loader/Loader.js";
+import Shelf from "./components/shelf/Shelf";
 
 class BooksApp extends React.Component {
-  state = {
-    books: [],
-    booksLoaded: false,
-    showSearchPage: false,
-    query: '',
-    booksToDisplay: []
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      books: [],
+      currentlyReading: [],
+      wantToRead: [],
+      read: [],
+      booksLoaded: false,
+      showSearchPage: false,
+      query: "",
+      booksToDisplay: []
+    };
+    this.updateBookShelf = this.updateBookShelf.bind(this);
+  }
   // to fetch all the books and then store to the local array
   componentDidMount() {
     BooksAPI.getAll()
       .then(books => {
-        this.setState({ books });
+        let tempReading = books.filter(
+          item => item.shelf === "currentlyReading"
+        );
+        let tempWillRead = books.filter(item => item.shelf === "wantToRead");
+        let tempRead = books.filter(item => item.shelf === "read");
+
+        this.setState({
+          books,
+          wantToRead: tempWillRead,
+          currentlyReading: tempReading,
+          read: tempRead
+        });
         this.setState({ booksLoaded: true });
-        // console.log(this.state.books);
       })
       .catch(err => console.log(err));
   }
   // browser reload will be called after the book shelf is changed
   reloadBooks() {
-    if (window.confirm('Bookshelf updated do you want to reload?')) {
-      window.location.reload()
-    };
+    if (window.confirm("Bookshelf updated do you want to reload?")) {
+      window.location.reload();
+    }
   }
   // network request will be made to update the book shelf in the server
-  updateBookShelf(event, book) {
-    BooksAPI.update(book, event.target.value).then(() => {
-        window.location.reload();
-    }).catch(err => console.log(`Error occurred while changing shelf ${err}`));
+  updateBookShelf(event, book, currentShelf) {
+    let shelf = event.target.value;
+    if (shelf === "currentlyReading") {
+      this.setState({
+        currentlyReading: this.state.currentlyReading.concat(book)
+      });
+    } else if (shelf === "read") {
+      this.setState({
+        read: this.state.read.concat(book)
+      });
+    } else if (shelf === "wantToRead") {
+      this.setState({
+        wantToRead: this.state.wantToRead.concat(book)
+      });
+    }
+    let remainedBooks = this.state[currentShelf].filter(
+      item => item.id !== book.id
+    );
+    if (currentShelf === "currentlyReading") {
+      this.setState({ currentlyReading: remainedBooks });
+    } else if (currentShelf === "read") {
+      this.setState({ read: remainedBooks });
+    } else if (currentShelf === "wantToRead") {
+      this.setState({ wantToRead: remainedBooks });
+    }
+    BooksAPI.update(book, shelf)
+      .then(() => {})
+      .catch(err => console.log(`Error occurred while changing shelf ${err}`));
   }
-  // handleSearchInput(e) {
-  //   // console.log(e.target.value, this);
-  //   this.setState({query: e.target.value});
-  // }
-  
+
   render() {
-    // search function for 
-    // const {books, query, booksToDisplay} = this.state;
-    // // let booksToDisplay;
-    // let matchedBooks = [];
-    // if (query === '') {
-    //   if (booksToDisplay.length !== books.length) {
-    //     this.setState({booksToDisplay: books});
-    //   }
-    // } else {
-    //   matchedBooks = books.filter(book => {
-    //   book.title.toLowerCase().trim().includes(query);
-    //   });
-    //   if (matchedBooks.length !== booksToDisplay.length) {
-    //     this.setState({booksToDisplay: matchedBooks});
-    //   }
-    // }
     return this.state.booksLoaded ? (
       <div className="app">
         <Route
@@ -72,28 +93,25 @@ class BooksApp extends React.Component {
               <div className="list-books-title">
                 <h1>MyReads</h1>
               </div>
-              {/* <div>
-                <input onInput={this.handleSearchInput.bind(this)} type='text' placeholder='Search books...' id='search'/>
-              </div> */}
               <div className="list-books-content">
-              {/* components are rendered from here */}
+                {/* components are rendered from here */}
                 <Shelf
                   handleSelection={this.updateBookShelf}
-                  books={this.state.books}
-                  shelfTitle='Currently Reading'
-                  shelf='currentlyReading'
+                  books={this.state.currentlyReading}
+                  shelfTitle="Currently Reading"
+                  shelf="currentlyReading"
                 />
                 <Shelf
                   handleSelection={this.updateBookShelf}
-                  books={this.state.books}
-                  shelfTitle='Want To Read'
-                  shelf='wantToRead'
+                  books={this.state.wantToRead}
+                  shelfTitle="Want To Read"
+                  shelf="wantToRead"
                 />
                 <Shelf
                   handleSelection={this.updateBookShelf}
-                  books={this.state.books}
-                  shelfTitle='Complete Reading'
-                  shelf='read'
+                  books={this.state.read}
+                  shelfTitle="Complete Reading"
+                  shelf="read"
                 />
               </div>
               <div className="open-search">
@@ -110,16 +128,18 @@ class BooksApp extends React.Component {
           exact
           path="/search"
           component={SearchBooks}
-          library = {this.state.books}
+          library={this.state.books}
         />
-        <div className='coder'>Coded with <span className='heart'>♥</span> by Ratnadeep</div>
+        <div className="coder">
+          Coded with <span className="heart">♥</span> by Ratnadeep
+        </div>
       </div>
-    ) : (<Loader/>);
+    ) : (
+      <Loader />
+    );
 
     //
   }
 }
 
-
- 
 export default BooksApp;
