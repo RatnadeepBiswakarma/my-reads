@@ -23,17 +23,12 @@ class SearchBooks extends Component {
         this.fetchHistory.push(this.state.query);
         BooksAPI.search(this.state.query) // api call to the server
           .then(books => {
-            BooksAPI.getAll()
-              .then(b => {
-                if (
-                  this.fetchHistory[this.fetchHistory.length - 1] ===
-                  this.state.query
-                ) {
-                  this.setState({ library: b });
-                  this.setState({ books });
-                }
-              })
-              .catch(err => console.log(err));
+            if (
+              this.fetchHistory[this.fetchHistory.length - 1] ===
+              this.state.query
+            ) {
+              this.setState({ books });
+            }
           })
           .catch(err => {
             console.log(err);
@@ -42,15 +37,10 @@ class SearchBooks extends Component {
     }
   };
   // option selection for the book shelf is handled in this function
-  handleSelection(event, book) {
-    // let title = book.title;
-    let shelf = event.target.value;
-    BooksAPI.update(book, shelf)
-      .then(() => {
-        this.props.history.push('/');
-          window.location.reload();
-      })
-      .catch(err => console.log(`Error while adding book: ${err}`));
+  handleSelection(shelf, book, newAddition, currentShelf) {
+    console.log(currentShelf)
+    this.props.updateBookShelf(shelf, book, newAddition, currentShelf);
+    this.props.history.push("/")
   }
   // text input event handling function
   handleChange(event) {
@@ -128,20 +118,26 @@ class SearchBooks extends Component {
                         />
                         {/* option menu check mark function starts from here */}
                         <div className="book-shelf-changer">
-                          {this.state.library.find(
+                          {this.props.library.find(
                             item => item.id === book.id
                           ) !== undefined ? (
                             <div>
-                              {this.state.library
+                              {this.props.library
                                 .filter(item => {
                                   return item.id === book.id;
                                 })
                                 .map(item => {
                                   return (
-                                    <select key={item.id}
+                                    <select
+                                      key={item.id}
                                       defaultValue="move"
                                       onChange={event => {
-                                        this.handleSelection(event, book);
+                                        this.handleSelection(
+                                          event.target.value,
+                                          book,
+                                          false,
+                                          item.shelf,
+                                        );
                                       }}
                                     >
                                       <option value="move" disabled>
@@ -171,7 +167,11 @@ class SearchBooks extends Component {
                             <select
                               defaultValue="move"
                               onChange={event => {
-                                this.handleSelection(event, book);
+                                this.handleSelection(
+                                  event.target.value,
+                                  book,
+                                  true
+                                );
                               }}
                             >
                               <option value="move" disabled>
