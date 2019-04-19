@@ -4,12 +4,16 @@ import React, { Component } from "react";
 import * as BooksAPI from "../../BooksAPI";
 // import "./App.css";
 import { Link } from "react-router-dom";
+import Nofity from "../Notification/Notify";
 
 class SearchBooks extends Component {
   state = {
     books: [],
     library: [],
-    query: ""
+    query: "",
+    showNotify: false,
+    smallThumbnail: "",
+    bookTitle: "",
   };
   lastAPICall = null;
   fetchHistory = [];
@@ -38,9 +42,17 @@ class SearchBooks extends Component {
   };
   // option selection for the book shelf is handled in this function
   handleSelection(shelf, book, newAddition, currentShelf) {
-    console.log(currentShelf)
+    console.log(book);
+    this.bookTitle = book.title
+    if (book.imageLinks.smallThumbnail) {
+      this.smallThumbnail = book.imageLinks.smallThumbnail;
+    }
+    this.showNotify = true;
     this.props.updateBookShelf(shelf, book, newAddition, currentShelf);
-    this.props.history.push("/")
+    // this.props.history.push("/");
+    setTimeout(() => {
+      this.showNotify = false;
+    }, 3000);
   }
   // text input event handling function
   handleChange(event) {
@@ -136,7 +148,7 @@ class SearchBooks extends Component {
                                           event.target.value,
                                           book,
                                           false,
-                                          item.shelf,
+                                          item.shelf
                                         );
                                       }}
                                     >
@@ -230,6 +242,13 @@ class SearchBooks extends Component {
             </div>
           )}
         </div>
+        {this.showNotify && (
+          <Nofity
+            smallThumbnail={this.smallThumbnail}
+            bookTitle={this.bookTitle}
+            showNotify={this.showNotify}
+          />
+        )}
       </div>
     );
   }
