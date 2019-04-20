@@ -2,31 +2,65 @@
   position: fixed;
   left: 20px;
   bottom: -110px;
-  height: 70px;
-  width: 200px;
-  background: #0090b4;
+  height: auto;
+  max-height: 90px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 300px;
+  background-image: linear-gradient(to right, #c25e00, #bb0083);
   padding: 5px;
   color: #ffffff;
-  box-shadow: 0px 0px 7px 0px #868686;
+  box-shadow: 0px 2px 5px 0px #4d4d4d;
   display: flex;
   flex-flow: row nowrap;
   align-content: center;
   border-radius: 1px;
+  font-family: Roboto, Arial, Helvetica, sans-serif;
+}
+.notification-container * {
+  transition: ease-out;
+  transition-duration: 0.3s;
 }
 
 .thumbnail {
   height: 100%;
-  width: 40px;
+  max-height: 80px;
+  width: auto;
+  max-width: 50px;
   object-fit: contain;
 }
 
-.info-text {
-  margin: 10px;
+.info-container {
+  position: relative;
+  padding-left: 8px;
+  text-align: center;
+  width: 100%;
+  overflow: hidden;
+}
+.notification-heading {
+  height: 24px;
+  line-height: 24px;
+  margin: 0;
+  padding-top: 2px;
+  margin-bottom: 0;
+  padding-bottom: 0;
+  padding: 0px;
+  font-size: 16px;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-p {
+.notification-content {
+  position: relative;
+  line-height: 14px;
   margin: 0;
-  padding: 5px
+  padding: 0;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  height: 100%;
+  width: 100%;
+  text-align: left;
 }
 
 @keyframes slideUp {
@@ -34,7 +68,7 @@ p {
     bottom: -110px;
     opacity: 0;
   }
-  10% {
+  5% {
     bottom: 40px;
     opacity: 1;
   }

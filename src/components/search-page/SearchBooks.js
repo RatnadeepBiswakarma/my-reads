@@ -14,6 +14,7 @@ class SearchBooks extends Component {
     showNotify: false,
     smallThumbnail: "",
     bookTitle: "",
+    bookDescription: ""
   };
   lastAPICall = null;
   fetchHistory = [];
@@ -42,17 +43,17 @@ class SearchBooks extends Component {
   };
   // option selection for the book shelf is handled in this function
   handleSelection(shelf, book, newAddition, currentShelf) {
-    console.log(book);
-    this.bookTitle = book.title
     if (book.imageLinks.smallThumbnail) {
-      this.smallThumbnail = book.imageLinks.smallThumbnail;
+      this.setState({
+        smallThumbnail: book.imageLinks.smallThumbnail,
+        bookDescription: book.description
+      });
     }
-    this.showNotify = true;
+    this.setState({ showNotify: true, bookTitle: book.title || "Book" });
     this.props.updateBookShelf(shelf, book, newAddition, currentShelf);
-    // this.props.history.push("/");
     setTimeout(() => {
-      this.showNotify = false;
-    }, 3000);
+      this.setState({ showNotify: false });
+    }, 4000);
   }
   // text input event handling function
   handleChange(event) {
@@ -242,11 +243,11 @@ class SearchBooks extends Component {
             </div>
           )}
         </div>
-        {this.showNotify && (
+        {this.state.showNotify && (
           <Nofity
-            smallThumbnail={this.smallThumbnail}
-            bookTitle={this.bookTitle}
-            showNotify={this.showNotify}
+            smallThumbnail={this.state.smallThumbnail}
+            bookTitle={this.state.bookTitle}
+            description={this.state.bookDescription}
           />
         )}
       </div>
