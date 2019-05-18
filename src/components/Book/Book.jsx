@@ -4,7 +4,7 @@ class Book extends Component {
   render() {
     const book = this.props.book;
     return (
-      <li key={book.id}>
+      <li id={book.id} key={book.id}>
         <div className="book">
           <div className="book-top">
             <div
