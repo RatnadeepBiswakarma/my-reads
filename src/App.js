@@ -9,6 +9,7 @@ import SearchBooks from "./components/search-page/SearchBooks.js";
 import { Link } from "react-router-dom";
 import Loader from "./loader/Loader.js";
 import Shelf from "./components/shelf/Shelf";
+import SearchInApp from "./components/search-page/InAppSearch.js"
 
 class BooksApp extends React.Component {
   constructor(props) {
@@ -117,6 +118,7 @@ class BooksApp extends React.Component {
               <div className="list-books-title">
                 <h1>MyReads</h1>
               </div>
+              <SearchInApp library={this.state.books} />
               <div className="list-books-content">
                 {/* components are rendered from here */}
                 <Shelf

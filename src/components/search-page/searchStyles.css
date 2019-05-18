@@ -1,0 +1,62 @@
+.in-app-search-input {
+  padding: 12px;
+  width: 100%;
+  border: 1px solid #c0c0c0;
+  font-size: 16px;
+  border-radius: 2px;
+  box-shadow: 0 4px 5px 0 #9c9c9c;
+}
+
+.in-app-search-input:focus {
+  outline: none;
+}
+
+.in-app-search-container {
+  margin: 15px auto;
+}
+
+.preview-container {
+  display: flex;
+  flex-flow: row nowrap;
+  padding: 10px 5px;
+  border-top: 1px solid #c0c0c0;
+  transition: background-image 0.4s ease;
+}
+
+.preview-container:first-child {
+  border-top: none;
+}
+
+.preview-container:hover {
+  background-image: linear-gradient(
+    to right,
+    rgb(233, 114, 2),
+    rgb(202, 0, 142)
+  );
+  color: white;
+  cursor: pointer;
+  /* transition: all 0.2s ease; */
+}
+.matched-books {
+  width: 400px;
+  max-height: 400px;
+  overflow: auto;
+  position: absolute;
+  background-color: white;
+  z-index: 1;
+  box-shadow: 3px 3px 5px 0 grey;
+  transition: height 3s ease-out;
+  overscroll-behavior: contain;
+}
+
+.book-cover-small {
+  height: 40px;
+  width: auto;
+}
+
+.book-info-small {
+  margin: auto 10px;
+}
+.book-info-small > p {
+  margin: 0;
+}
