@@ -4,12 +4,17 @@ import React, { Component } from "react";
 import * as BooksAPI from "../../BooksAPI";
 // import "./App.css";
 import { Link } from "react-router-dom";
+import Nofity from "../Notification/Notify";
 
 class SearchBooks extends Component {
   state = {
     books: [],
     library: [],
-    query: ""
+    query: "",
+    showNotify: false,
+    smallThumbnail: "",
+    bookTitle: "",
+    bookDescription: ""
   };
   lastAPICall = null;
   fetchHistory = [];
@@ -38,9 +43,17 @@ class SearchBooks extends Component {
   };
   // option selection for the book shelf is handled in this function
   handleSelection(shelf, book, newAddition, currentShelf) {
-    console.log(currentShelf)
+    if (book.imageLinks.smallThumbnail) {
+      this.setState({
+        smallThumbnail: book.imageLinks.smallThumbnail,
+        bookDescription: book.description
+      });
+    }
+    this.setState({ showNotify: true, bookTitle: book.title || "Book" });
     this.props.updateBookShelf(shelf, book, newAddition, currentShelf);
-    this.props.history.push("/")
+    setTimeout(() => {
+      this.setState({ showNotify: false });
+    }, 4000);
   }
   // text input event handling function
   handleChange(event) {
@@ -136,7 +149,7 @@ class SearchBooks extends Component {
                                           event.target.value,
                                           book,
                                           false,
-                                          item.shelf,
+                                          item.shelf
                                         );
                                       }}
                                     >
@@ -230,6 +243,13 @@ class SearchBooks extends Component {
             </div>
           )}
         </div>
+        {this.state.showNotify && (
+          <Nofity
+            smallThumbnail={this.state.smallThumbnail}
+            bookTitle={this.state.bookTitle}
+            description={this.state.bookDescription}
+          />
+        )}
       </div>
     );
   }
